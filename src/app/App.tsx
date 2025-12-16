@@ -1,7 +1,7 @@
-import { HomePage } from '@/features/home'
+import { RouterProvider } from './providers/RouterProvider'
 
 function App() {
-	return <HomePage />
+	return <RouterProvider />
 }
 
 export default App

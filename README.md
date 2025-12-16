@@ -1,4 +1,4 @@
-# example-project-frontend-react
+# example-project
 
 Frontend React template moderno para aplicações SAAS, construído com React, TypeScript, Vite, Tailwind CSS e shadcn/ui.
 
@@ -18,7 +18,6 @@ Este repositório é um template de projeto. Para usar em um novo projeto:
 
 - Node.js (v18 ou superior)
 - npm ou yarn
-- Backend API rodando (veja seção de integração)
 
 ### Instalação
 
@@ -52,62 +51,117 @@ npm run preview
 
 ## 🏗️ Estrutura do Projeto
 
+Arquitetura moderna baseada em **features** (Feature-based Architecture):
+
 ```
-example-project-frontend-react/
-├── public/              # Arquivos estáticos
+example-project/
+├── public/                    # Arquivos estáticos
 ├── src/
-│   ├── assets/         # Imagens, fontes, etc
-│   ├── components/     # Componentes React
-│   │   ├── ui/        # Componentes shadcn/ui
-│   │   ├── layout/    # Header, Footer, etc
-│   │   └── features/  # Componentes específicos
-│   ├── models/        # TypeScript interfaces/types
-│   ├── services/      # Camada de comunicação com API
-│   ├── pages/         # Páginas da aplicação
-│   ├── hooks/         # Custom React hooks
-│   ├── store/         # Zustand stores
-│   ├── config/        # Configurações (routes, API)
-│   ├── lib/           # Utilitários
-│   ├── App.tsx        # Componente principal com rotas
-│   ├── main.tsx       # Entry point
-│   └── globals.css    # Estilos globais Tailwind
-├── .env.example       # Exemplo de variáveis de ambiente
+│   ├── app/                  # Configuração da aplicação
+│   │   ├── App.tsx          # Componente raiz
+│   │   └── providers/       # Providers (Router, Theme, etc)
+│   │       └── RouterProvider.tsx
+│   │
+│   ├── features/            # Funcionalidades isoladas (Feature-based)
+│   │   ├── home/           # Feature: Landing Page
+│   │   │   ├── components/ # Componentes específicos
+│   │   │   ├── hooks/      # Hooks específicos
+│   │   │   ├── types/      # Types específicos
+│   │   │   ├── HomePage.tsx
+│   │   │   └── index.ts    # Exports públicos
+│   │   │
+│   │   └── auth/           # Feature: Autenticação
+│   │       ├── components/
+│   │       ├── hooks/
+│   │       ├── types/
+│   │       └── index.ts
+│   │
+│   ├── shared/              # Código compartilhado
+│   │   ├── ui/             # Componentes shadcn/ui
+│   │   ├── components/     # Componentes reutilizáveis (Header, Footer)
+│   │   ├── hooks/          # Hooks compartilhados
+│   │   ├── lib/            # Utilitários (utils.ts)
+│   │   ├── types/          # Types compartilhados
+│   │   └── constants/      # Constantes (routes.ts)
+│   │
+│   ├── assets/             # Assets estáticos
+│   │   ├── images/
+│   │   └── icons/
+│   │
+│   ├── styles/             # Estilos
+│   │   └── globals.css     # Estilos globais Tailwind
+│   │
+│   └── main.tsx            # Entry point
+│
+├── .env.example            # Exemplo de variáveis de ambiente
 ├── package.json
 ├── tsconfig.json
 ├── vite.config.ts
-├── tailwind.config.ts
-└── components.json    # Configuração shadcn/ui
+├── tailwind.config.js
+├── postcss.config.js
+└── components.json         # Configuração shadcn/ui
 ```
+
+## 🎯 Arquitetura
+
+### Feature-based Architecture
+
+Cada feature é **auto-contida** e isolada:
+
+```
+features/[feature-name]/
+├── components/    # Componentes específicos da feature
+├── hooks/         # Hooks específicos (useAuth, useLogin, etc)
+├── types/         # Types específicos (User, LoginRequest, etc)
+├── services/      # Lógica de negócio/API (quando necessário)
+├── [Feature]Page.tsx  # Página principal
+└── index.ts       # Exports públicos (barrel exports)
+```
+
+**Benefícios:**
+- ✅ Código organizado por funcionalidade
+- ✅ Fácil de escalar e manter
+- ✅ Features isoladas e reutilizáveis
+- ✅ Imports limpos via `index.ts`
+
+### Shared Code
+
+Código compartilhado entre features:
+
+- `shared/ui/` - Componentes shadcn/ui
+- `shared/components/` - Componentes reutilizáveis (Header, Footer)
+- `shared/hooks/` - Hooks compartilhados
+- `shared/lib/` - Utilitários
+- `shared/types/` - Types compartilhados
+- `shared/constants/` - Constantes (rotas, configurações)
 
 ## 📦 Stack Tecnológica
 
-- **React 18+** - Biblioteca UI
+- **React 19** - Biblioteca UI
 - **TypeScript** - Tipagem estática
 - **Vite** - Build tool rápida
 - **Tailwind CSS** - Estilização utilitária
 - **shadcn/ui** - Componentes UI modernos
 - **React Router** - Roteamento
-- **Zustand** - Gerenciamento de estado
+- **Zustand** - Gerenciamento de estado (quando necessário)
 - **React Hook Form** - Formulários
 - **Zod** - Validação de schemas
-- **Axios** - Cliente HTTP
+- **Axios** - Cliente HTTP (quando necessário)
 - **Lucide React** - Ícones
 
 ## 🎨 Padronização de Nomes
 
-- **Models**: `*.model.ts` (ex: `user.model.ts`, `billing.model.ts`)
-- **Services**: `*.service.ts` (ex: `auth.service.ts`, `billing.service.ts`)
-- **Components**: PascalCase (ex: `Header.tsx`, `PricingCard.tsx`)
-- **Pages**: PascalCase com sufixo `Page` (ex: `LoginPage.tsx`, `BillingPage.tsx`)
+- **Components**: PascalCase (ex: `Header.tsx`, `LoginPage.tsx`)
 - **Hooks**: `use*.ts` (ex: `useAuth.ts`, `useTheme.ts`)
-- **Stores**: `*Store.ts` (ex: `authStore.ts`, `themeStore.ts`)
-- **Config**: `*.config.ts` (ex: `routes.config.ts`, `api.config.ts`)
+- **Types**: `*.types.ts` ou `*.types.ts` (ex: `user.types.ts`)
+- **Services**: `*.service.ts` (ex: `auth.service.ts`)
+- **Constants**: `*.ts` (ex: `routes.ts`)
 
 ## 🔧 Configuração
 
 ### Variáveis de Ambiente
 
-Crie um arquivo `.env` na raiz do projeto:
+Copie o arquivo `.env.example` para `.env` e configure:
 
 ```env
 # URL da API Backend
@@ -115,82 +169,50 @@ VITE_API_URL=http://localhost:3000/api
 
 # Nome da aplicação
 VITE_APP_NAME=example-project
+
+# Habilitar Scalar API Reference (opcional)
+VITE_ENABLE_SCALAR=false
 ```
 
-### Integração com Backend
+### Path Aliases
 
-O template espera uma API backend NestJS com os seguintes endpoints:
+O projeto usa path aliases configurados:
 
-**Autenticação:**
-- `POST /auth/login` - Login
-- `POST /auth/register` - Registro
-- `POST /auth/logout` - Logout
-- `GET /auth/me` - Obter usuário atual
+- `@/` → `src/`
+- `@/shared/` → `src/shared/`
+- `@/features/` → `src/features/`
 
-**Usuário:**
-- `GET /user/profile` - Obter perfil
-- `PATCH /user/profile` - Atualizar perfil
-
-**Billing:**
-- `GET /billing/plans` - Listar planos
-- `GET /billing/subscription` - Obter assinatura atual
-- `POST /billing/subscribe` - Assinar plano
-- `GET /billing/invoices` - Listar faturas
-
-**Formato de Resposta Esperado:**
-
+Exemplo de uso:
 ```typescript
-{
-  data: T,           // Dados da resposta
-  message?: string,  // Mensagem opcional
-  statusCode?: number
-}
+import { Button } from '@/shared/ui/button'
+import { HomePage } from '@/features/home'
 ```
 
-**Autenticação:**
+## 🎯 Features Implementadas
 
-As requisições autenticadas devem incluir o token JWT no header:
-```
-Authorization: Bearer <token>
-```
-
-O token é armazenado automaticamente no localStorage após login.
-
-## 🎯 Features Principais
-
-### 1. Landing Page
-- Hero section moderna com gradientes
-- Seção de features destacando funcionalidades
-- Preview de planos com cards elegantes
-- Design responsivo e moderno
-- Animações suaves
+### 1. Landing Page Completa
+- ✅ Hero section com social proof e visual do produto
+- ✅ Seção de parceiros (Partners)
+- ✅ Grid de funcionalidades (Features)
+- ✅ Como funciona (How it works)
+- ✅ Seção de preços (Pricing)
+- ✅ Depoimentos (Testimonials)
+- ✅ FAQ (Perguntas frequentes)
+- ✅ Call-to-action final
+- ✅ Design responsivo e moderno
 
 ### 2. Sistema de Autenticação
-- Login com validação completa (React Hook Form + Zod)
-- Registro de usuários com confirmação de senha
-- Gerenciamento de sessão (Zustand + localStorage)
-- Proteção de rotas
-- Design moderno e profissional
+- ✅ Página de Login com design moderno
+- ✅ Página de Registro com design moderno
+- ✅ Botões de login social (Google e Apple)
+- ✅ Formulários bem estruturados
+- ✅ Design focado em conversão
 
-### 3. Tela de Billing
-- Listagem de planos com cards destacados
-- Assinatura de planos integrada com backend
-- Visualização de assinatura atual
-- Design moderno com badges e animações
-- Estados de loading e feedback visual
-
-### 4. Dark Mode
-- Suporte completo a tema claro/escuro
-- Persistência da preferência no localStorage
-- Transições suaves entre temas
-- Detecção automática do tema do sistema
-- Toggle no header e em múltiplos locais
-
-### 5. Dashboard
-- Página de exemplo com métricas
-- Cards de estatísticas
-- Layout responsivo
-- Integração com autenticação
+### 3. Roteamento
+- ✅ React Router configurado
+- ✅ Layout wrapper para rotas com Header/Footer
+- ✅ Rotas públicas e de autenticação
+- ✅ Navegação funcional
 
 ## 📝 Scripts Disponíveis
 
@@ -203,7 +225,7 @@ O token é armazenado automaticamente no localStorage após login.
 
 ### Cores e Tema
 
-As cores podem ser customizadas no arquivo `src/globals.css` nas variáveis CSS:
+As cores podem ser customizadas no arquivo `src/styles/globals.css` nas variáveis CSS:
 
 ```css
 :root {
@@ -216,15 +238,29 @@ As cores podem ser customizadas no arquivo `src/globals.css` nas variáveis CSS:
 ### Adicionar Componentes shadcn/ui
 
 ```bash
-npx shadcn-ui@latest add [component-name]
+npx shadcn@latest add [component-name]
 ```
+
+### Adicionar Nova Feature
+
+1. Crie a pasta em `src/features/[feature-name]/`
+2. Siga a estrutura padrão (components, hooks, types, index.ts)
+3. Exporte no `index.ts` da feature
+4. Adicione a rota em `app/providers/RouterProvider.tsx`
 
 ### Alterar Nome do Projeto
 
-1. Busque `example-project` em todos os arquivos
+1. Busque `example-project` em todos os arquivos (Ctrl+F / Cmd+F)
 2. Substitua pelo nome do seu projeto
 3. Atualize `package.json` com o novo nome
-4. Atualize variáveis de ambiente
+4. Atualize variáveis de ambiente no `.env`
+
+## 🔍 Encontrar Nomes Específicos do Projeto
+
+Para customizar este template para um novo projeto, busque por:
+
+- `example-project` - Identificador principal do projeto
+- `example-project-frontend-react` - Nome do package
 
 ## 🚢 Deploy
 
@@ -253,7 +289,6 @@ RUN npm run build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 ```
@@ -269,4 +304,3 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull re
 ---
 
 Feito com ❤️ usando React + TypeScript + Tailwind CSS + shadcn/ui
-

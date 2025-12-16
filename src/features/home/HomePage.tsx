@@ -1,5 +1,3 @@
-import { Header } from '@/shared/components/Header'
-import { Footer } from '@/shared/components/Footer'
 import { Hero } from './components/Hero'
 import { Partners } from './components/Partners'
 import { Features } from './components/Features'
@@ -11,8 +9,7 @@ import { CTA } from './components/CTA'
 
 export function HomePage() {
 	return (
-		<div className="min-h-screen flex flex-col">
-			<Header />
+		<>
 			<Hero />
 			<Partners />
 			<Features />
@@ -21,8 +18,7 @@ export function HomePage() {
 			<Testimonials />
 			<FAQ />
 			<CTA />
-			<Footer />
-		</div>
+		</>
 	)
 }
 
