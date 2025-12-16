@@ -1,0 +1,5 @@
+export { HomePage } from './HomePage'
+export { Hero } from './components/Hero'
+export { Features } from './components/Features'
+export { Stats } from './components/Stats'
+export { CTA } from './components/CTA'
