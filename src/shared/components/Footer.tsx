@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom'
 import { Separator } from '@/shared/ui/separator'
 import { Input } from '@/shared/ui/input'
 import { Button } from '@/shared/ui/button'
+import { ROUTES } from '@/shared/constants/routes'
 
 const footerLinks = {
 	Produto: [
@@ -10,20 +12,20 @@ const footerLinks = {
 		{ label: 'Roadmap', href: '#' },
 	],
 	Empresa: [
-		{ label: 'Sobre', href: '#' },
+		{ label: 'Sobre', href: ROUTES.about },
 		{ label: 'Blog', href: '#' },
 		{ label: 'Carreiras', href: '#' },
-		{ label: 'Contato', href: '#' },
+		{ label: 'Contato', href: ROUTES.contact },
 	],
 	Recursos: [
 		{ label: 'Documentação', href: '#' },
 		{ label: 'API', href: '#' },
-		{ label: 'Suporte', href: '#' },
+		{ label: 'Suporte', href: ROUTES.help },
 		{ label: 'Comunidade', href: '#' },
 	],
 	Legal: [
-		{ label: 'Privacidade', href: '#' },
-		{ label: 'Termos', href: '#' },
+		{ label: 'Privacidade', href: ROUTES.privacy },
+		{ label: 'Termos', href: ROUTES.terms },
 		{ label: 'Cookies', href: '#' },
 	],
 }
@@ -39,12 +41,21 @@ export function Footer() {
 							<ul className="space-y-2">
 								{links.map((link) => (
 									<li key={link.label}>
-										<a
-											href={link.href}
-											className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-										>
-											{link.label}
-										</a>
+										{link.href === '#' ? (
+											<a
+												href={link.href}
+												className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+											>
+												{link.label}
+											</a>
+										) : (
+											<Link
+												to={link.href}
+												className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+											>
+												{link.label}
+											</Link>
+										)}
 									</li>
 								))}
 							</ul>
@@ -75,12 +86,18 @@ export function Footer() {
 							© {new Date().getFullYear()} example-project. Todos os direitos reservados.
 						</p>
 						<div className="flex gap-4 text-sm">
-							<a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+							<Link
+								to={ROUTES.privacy}
+								className="text-muted-foreground hover:text-foreground transition-colors"
+							>
 								Política de Privacidade
-							</a>
-							<a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+							</Link>
+							<Link
+								to={ROUTES.terms}
+								className="text-muted-foreground hover:text-foreground transition-colors"
+							>
 								Termos de Uso
-							</a>
+							</Link>
 						</div>
 					</div>
 					<div className="flex gap-6">

@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useRef } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { GoogleLogin } from '@react-oauth/google'
 import { ROUTES } from '@/shared/constants/routes'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -13,26 +14,75 @@ import {
 	CardTitle,
 } from '@/shared/ui/card'
 import { Separator } from '@/shared/ui/separator'
-import { Mail, Lock, Chrome, Apple } from 'lucide-react'
+import { Mail, Lock, Chrome, Apple, Loader2 } from 'lucide-react'
+import { useAuth } from '../hooks/useAuth'
+import { useGoogleAuth } from '../hooks/useGoogleAuth'
+import { useAppleAuth } from '../hooks/useAppleAuth'
+import { getErrorMessage } from '@/shared/lib/error-handler'
+import { toast } from '@/shared/ui/use-toast'
 
 export function LoginPage() {
+	const navigate = useNavigate()
+	const { login, isLoading: isAuthLoading } = useAuth()
+	const { onGoogleSuccess, onGoogleError, isLoading: isGoogleLoading } =
+		useGoogleAuth()
+	const { loginWithApple } = useAppleAuth()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+	const googleLoginRef = useRef<HTMLDivElement>(null)
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const isLoading = isAuthLoading || isGoogleLoading
+
+	const handleGoogleLoginClick = () => {
+		// Dispara o clique no botão do GoogleLogin que está escondido
+		const googleButton = googleLoginRef.current?.querySelector(
+			'div[role="button"]'
+		) as HTMLElement
+		if (googleButton) {
+			googleButton.click()
+		}
+	}
+
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		// TODO: Implementar login
-		console.log('Login:', { email, password })
+
+		try {
+			await login({ email, password })
+			toast({
+				title: 'Login realizado com sucesso!',
+				description: 'Redirecionando...',
+			})
+			// Redirecionar para home após login
+			navigate(ROUTES.home)
+		} catch (error) {
+			toast({
+				title: 'Erro ao fazer login',
+				description: getErrorMessage(error),
+				variant: 'destructive',
+			})
+		}
 	}
 
-	const handleGoogleLogin = () => {
-		// TODO: Implementar login com Google
-		console.log('Login com Google')
-	}
 
-	const handleAppleLogin = () => {
-		// TODO: Implementar login com Apple
-		console.log('Login com Apple')
+	const handleAppleLogin = async () => {
+		try {
+			// TODO: Integrar com Apple SDK quando instalado
+			// Por enquanto, apenas mostra mensagem
+			toast({
+				title: 'Apple Login',
+				description: 'Integração com Apple SDK será implementada em breve.',
+			})
+			// Exemplo de uso quando SDK estiver configurado:
+			// const token = await getAppleToken()
+			// await loginWithApple(token)
+			// navigate(ROUTES.home)
+		} catch (error) {
+			toast({
+				title: 'Erro ao fazer login com Apple',
+				description: getErrorMessage(error),
+				variant: 'destructive',
+			})
+		}
 	}
 
 	return (
@@ -51,20 +101,43 @@ export function LoginPage() {
 				<CardContent className="space-y-4">
 					{/* Social Login Buttons */}
 					<div className="grid grid-cols-2 gap-3">
-						<Button
-							type="button"
-							variant="outline"
-							className="w-full"
-							onClick={handleGoogleLogin}
-						>
-							<Chrome className="mr-2 h-4 w-4" />
-							Google
-						</Button>
+						{/* Google Login - Botão customizado que dispara o GoogleLogin oculto */}
+						<div className="relative w-full">
+							{/* GoogleLogin escondido */}
+							<div ref={googleLoginRef} className="absolute opacity-0 pointer-events-none">
+								<GoogleLogin
+									onSuccess={onGoogleSuccess}
+									onError={onGoogleError}
+									useOneTap={false}
+								/>
+							</div>
+							{/* Botão customizado bonito */}
+							<Button
+								type="button"
+								variant="outline"
+								className="w-full"
+								onClick={handleGoogleLoginClick}
+								disabled={isLoading}
+							>
+								{isGoogleLoading ? (
+									<>
+										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+										Entrando...
+									</>
+								) : (
+									<>
+										<Chrome className="mr-2 h-4 w-4" />
+										Google
+									</>
+								)}
+							</Button>
+						</div>
 						<Button
 							type="button"
 							variant="outline"
 							className="w-full"
 							onClick={handleAppleLogin}
+							disabled={isLoading}
 						>
 							<Apple className="mr-2 h-4 w-4" />
 							Apple
@@ -124,8 +197,20 @@ export function LoginPage() {
 							</div>
 						</div>
 
-						<Button type="submit" className="w-full" size="lg">
-							Entrar
+						<Button
+							type="submit"
+							className="w-full"
+							size="lg"
+							disabled={isAuthLoading}
+						>
+							{isAuthLoading ? (
+								<>
+									<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+									Entrando...
+								</>
+							) : (
+								'Entrar'
+							)}
 						</Button>
 					</form>
 				</CardContent>
