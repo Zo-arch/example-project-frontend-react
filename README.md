@@ -277,21 +277,13 @@ Para customizar este template para um novo projeto, busque por:
 3. Publish directory: `dist`
 4. Configure variáveis de ambiente
 
-### Docker
+### AWS S3 + CloudFront
 
-```dockerfile
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
+Deploy automático via GitHub Actions. Consulte o arquivo [DEPLOY.md](./DEPLOY.md) para instruções completas de configuração.
 
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
+1. Configure os secrets no GitHub (Settings > Secrets and variables > Actions)
+2. Configure bucket S3 e CloudFront na AWS
+3. Faça push para `main` ou `master` - deploy automático
 
 ## 📄 Licença
 
