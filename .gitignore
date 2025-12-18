@@ -128,3 +128,13 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Terraform - Apenas arquivos sensíveis e cache
+# Manter no repo: *.tf, terraform.tfvars.example, terraform/README.md
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log

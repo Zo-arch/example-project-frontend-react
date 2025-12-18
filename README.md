@@ -281,8 +281,15 @@ Para customizar este template para um novo projeto, busque por:
 
 Deploy automático via GitHub Actions. Consulte o arquivo [DEPLOY.md](./DEPLOY.md) para instruções completas de configuração.
 
-1. Configure os secrets no GitHub (Settings > Secrets and variables > Actions)
-2. Configure bucket S3 e CloudFront na AWS
+**Opção Recomendada - Terraform (Automático):**
+1. Use Terraform para criar toda a infraestrutura automaticamente
+2. Consulte [`terraform/README.md`](./terraform/README.md) para guia completo
+3. Configure os secrets no GitHub usando os outputs do Terraform
+4. Faça push para `main` ou `master` - deploy automático
+
+**Opção Manual:**
+1. Configure bucket S3 e CloudFront manualmente na AWS
+2. Configure os secrets no GitHub (Settings > Secrets and variables > Actions)
 3. Faça push para `main` ou `master` - deploy automático
 
 ## 📄 Licença

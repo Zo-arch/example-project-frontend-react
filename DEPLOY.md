@@ -2,7 +2,45 @@
 
 Este projeto possui configuração de CI/CD white label. Basta configurar as variáveis de ambiente (secrets) no GitHub e o deploy será feito automaticamente para AWS S3 + CloudFront.
 
-## Pré-requisitos AWS
+## Opções de Setup
+
+Você pode configurar a infraestrutura AWS de duas formas:
+
+### Opção 1: Terraform (Recomendado - Automático) ⚡
+
+O método mais rápido e confiável. Automatiza a criação de toda a infraestrutura necessária.
+
+**Vantagens:**
+- ✅ Setup completo em minutos
+- ✅ Infraestrutura como código (versionável)
+- ✅ Elimina erros de configuração manual
+- ✅ Outputs prontos para secrets do GitHub
+
+**Como usar:**
+1. Instale o Terraform (https://www.terraform.io/downloads)
+2. Configure suas credenciais AWS (`aws configure`)
+3. Edite `terraform/terraform.tfvars.example` e renomeie para `terraform.tfvars`
+4. Execute:
+   ```bash
+   cd terraform
+   terraform init
+   terraform plan
+   terraform apply
+   ```
+5. Use os outputs do Terraform para configurar os secrets no GitHub:
+   ```bash
+   terraform output
+   ```
+
+**Documentação completa:** Veja [`terraform/README.md`](./terraform/README.md)
+
+### Opção 2: Setup Manual (Console AWS)
+
+Se preferir criar a infraestrutura manualmente no console AWS, siga as instruções abaixo.
+
+---
+
+## Pré-requisitos AWS (Setup Manual)
 
 Antes de configurar o deploy, você precisa ter:
 

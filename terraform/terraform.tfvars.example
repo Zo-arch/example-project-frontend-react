@@ -1,0 +1,20 @@
+# Nome do projeto (será usado no nome do bucket e outros recursos)
+# Exemplo: meu-app, saas-project, etc.
+project_name = "meu-app"
+
+# Região AWS onde os recursos serão criados
+# Padrão: us-east-1
+aws_region = "sa-east-1"
+
+# Ambiente (prod, staging, dev)
+# Será usado no nome dos recursos: project_name-environment
+environment = "prod"
+
+# Habilitar versionamento no bucket S3
+# Padrão: false
+enable_versioning = false
+
+# Origens CORS permitidas (opcional, deixe vazio se não usar)
+# Exemplo: ["https://www.exemplo.com", "https://app.exemplo.com"]
+allowed_cors_origins = []
+
