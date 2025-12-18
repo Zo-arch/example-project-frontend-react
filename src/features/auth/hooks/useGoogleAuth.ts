@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import type { CredentialResponse } from '@react-oauth/google'
 import { useAuthStore } from '../store/auth.store'
 import { authService } from '../services/auth.service'
 import { ROUTES } from '@/shared/constants/routes'
@@ -47,7 +48,7 @@ export function useGoogleAuth() {
 	 * Recebe o credential (id_token) do componente GoogleLogin
 	 */
 	const onGoogleSuccess = useCallback(
-		(credentialResponse: { credential: string }) => {
+		(credentialResponse: CredentialResponse) => {
 			if (credentialResponse.credential) {
 				// credential é o id_token (JWT) que o backend espera
 				handleGoogleLogin(credentialResponse.credential)

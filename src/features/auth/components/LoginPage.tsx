@@ -17,7 +17,6 @@ import { Separator } from '@/shared/ui/separator'
 import { Mail, Lock, Chrome, Apple, Loader2 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useGoogleAuth } from '../hooks/useGoogleAuth'
-import { useAppleAuth } from '../hooks/useAppleAuth'
 import { getErrorMessage } from '@/shared/lib/error-handler'
 import { toast } from '@/shared/ui/use-toast'
 
@@ -26,7 +25,6 @@ export function LoginPage() {
 	const { login, isLoading: isAuthLoading } = useAuth()
 	const { onGoogleSuccess, onGoogleError, isLoading: isGoogleLoading } =
 		useGoogleAuth()
-	const { loginWithApple } = useAppleAuth()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const googleLoginRef = useRef<HTMLDivElement>(null)

@@ -18,7 +18,6 @@ import { Mail, Lock, User, Chrome, Apple, Check, Loader2 } from 'lucide-react'
 import { EmailVerificationModal } from '@/shared/components/EmailVerificationModal'
 import { useAuth } from '../hooks/useAuth'
 import { useGoogleAuth } from '../hooks/useGoogleAuth'
-import { useAppleAuth } from '../hooks/useAppleAuth'
 import { getErrorMessage } from '@/shared/lib/error-handler'
 import { toast } from '@/shared/ui/use-toast'
 
@@ -27,7 +26,6 @@ export function RegisterPage() {
 	const { register, verifyEmail, resendVerification, isLoading: isAuthLoading } = useAuth()
 	const { onGoogleSuccess, onGoogleError, isLoading: isGoogleLoading } =
 		useGoogleAuth()
-	const { loginWithApple } = useAppleAuth()
 	const [name, setName] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
