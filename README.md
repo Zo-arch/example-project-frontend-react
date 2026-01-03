@@ -159,23 +159,12 @@ Código compartilhado entre features:
 
 ## 🔧 Configuração
 
-### Variáveis de Ambiente - Guia Completo
+### Variáveis de Ambiente
 
-Este projeto usa diferentes tipos de variáveis de ambiente dependendo do contexto. É importante entender onde configurar cada uma:
+Este projeto usa variáveis de ambiente para configuração:
 
-Este projeto usa variáveis de ambiente em diferentes contextos:
-
-**1. Desenvolvimento Local (`.env`)**
 - Copie `env.example` para `.env` e configure com seus valores locais
-- Usado apenas para rodar `npm run dev` localmente
-
-**2. Produção (GitHub Secrets)**
-- Configure em: Settings > Secrets and variables > Actions
-- Usado pelo workflow de deploy para build de produção
-
-**3. Infraestrutura (terraform.tfvars)**
-- Configure em `terraform/terraform.tfvars` (copie de `terraform.tfvars.example`)
-- Usado apenas pelo Terraform para criar recursos AWS
+- Usado para rodar `npm run dev` localmente
 
 **Todas as variáveis disponíveis estão documentadas em `env.example`, organizadas por seção.**
 
@@ -261,122 +250,6 @@ npx shadcn@latest add [component-name]
 4. Atualize variáveis de ambiente no `.env`
 
 
-## 🚢 Deploy
-
-### AWS S3 + CloudFront (Recomendado)
-
-Deploy automático via GitHub Actions. O workflow é acionado automaticamente em push para `main` ou `master`.
-
-#### Opção 1: Terraform (Automático - Recomendado) ⚡
-
-O método mais rápido e confiável. Automatiza a criação de toda a infraestrutura necessária.
-
-**Vantagens:**
-- ✅ Setup completo em minutos
-- ✅ Infraestrutura como código (versionável)
-- ✅ Elimina erros de configuração manual
-- ✅ Outputs prontos para secrets do GitHub
-
-**Passos:**
-
-1. **Instalar Terraform** (https://www.terraform.io/downloads)
-2. **Configurar credenciais AWS:**
-   ```bash
-   aws configure
-   ```
-3. **Configurar Terraform:**
-   ```bash
-   cd terraform
-   cp terraform.tfvars.example terraform.tfvars
-   # Edite terraform.tfvars com seus valores
-   ```
-4. **Criar infraestrutura:**
-   ```bash
-   terraform init
-   terraform plan
-   terraform apply
-   ```
-5. **Obter outputs para GitHub Secrets:**
-   ```bash
-   terraform output
-   ```
-6. **Configurar secrets no GitHub:**
-   - Settings > Secrets and variables > Actions
-   - Use os outputs do Terraform para configurar os secrets (veja tabela abaixo)
-
-**Documentação completa:** [`terraform/README.md`](./terraform/README.md)
-
-#### Opção 2: Setup Manual (Console AWS)
-
-Se preferir criar a infraestrutura manualmente:
-
-**Pré-requisitos:**
-1. **Bucket S3** criado e configurado
-2. **CloudFront Distribution** configurada apontando para o bucket
-3. **Usuário IAM** com permissões:
-   - `s3:PutObject`, `s3:DeleteObject`, `s3:ListBucket`
-   - `cloudfront:CreateInvalidation`
-
-**Configurar Secrets no GitHub:**
-- Settings > Secrets and variables > Actions > New repository secret
-
-#### Secrets do GitHub Actions
-
-| Secret | Descrição | Como Obter |
-|--------|-----------|------------|
-| `AWS_ACCESS_KEY_ID` | Access Key do usuário IAM | Terraform output ou criar manualmente no IAM |
-| `AWS_SECRET_ACCESS_KEY` | Secret Key do usuário IAM | Terraform output ou criar manualmente no IAM |
-| `AWS_S3_BUCKET` | Nome do bucket S3 | Terraform output ou nome do bucket criado |
-| `AWS_CLOUDFRONT_DISTRIBUTION_ID` | ID da distribuição CloudFront | Terraform output ou ID da distribuição |
-| `AWS_REGION` | Região AWS | `us-east-1` (ou sua região) |
-| `VITE_API_URL` | URL da API em produção | Sua URL da API |
-| `VITE_APP_NAME` | Nome da aplicação | Nome do seu projeto |
-| `VITE_GOOGLE_CLIENT_ID` | (Opcional) Google OAuth | Se usar autenticação Google |
-| `VITE_APPLE_CLIENT_ID` | (Opcional) Apple OAuth | Se usar autenticação Apple |
-
-#### Como Funciona o Deploy
-
-O workflow (`.github/workflows/deploy.yml`) executa automaticamente:
-
-1. Checkout do código
-2. Setup Node.js 18
-3. Instalação de dependências (`npm ci`)
-4. Build do projeto com variáveis de ambiente dos secrets
-5. Configuração de credenciais AWS
-6. Sincronização dos arquivos para S3 (`aws s3 sync`)
-7. Invalidação do cache CloudFront (se configurado)
-
-Após configurar os secrets, basta fazer push para `main` ou `master` e o deploy acontece automaticamente.
-
-#### Troubleshooting
-
-**Build falha com erro de variável:**
-- Verifique se todos os secrets obrigatórios estão configurados
-- Confirme que os nomes dos secrets estão corretos (case-sensitive)
-
-**Deploy para S3 falha:**
-- Verifique credenciais AWS (Access Key ID e Secret)
-- Confirme nome do bucket
-- Verifique permissões IAM do usuário
-
-**CloudFront não invalida cache:**
-- Verifique se `AWS_CLOUDFRONT_DISTRIBUTION_ID` está configurado
-- Confirme permissão `cloudfront:CreateInvalidation` no IAM
-
-### Outras Plataformas
-
-#### Vercel
-
-1. Conecte seu repositório ao Vercel
-2. Configure as variáveis de ambiente
-3. Deploy automático em cada push
-
-#### Netlify
-
-1. Conecte seu repositório ao Netlify
-2. Configure build command: `npm run build`
-3. Publish directory: `dist`
-4. Configure variáveis de ambiente
 
 ## 📄 Licença
 
